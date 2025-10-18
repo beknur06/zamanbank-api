@@ -1,4 +1,4 @@
-package com.kz.zamanbankapi.repositories;
+package com.kz.zamanbankapi.dao.repositories;
 
 import com.kz.zamanbankapi.dao.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

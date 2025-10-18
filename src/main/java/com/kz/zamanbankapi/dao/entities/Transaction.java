@@ -16,19 +16,23 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "card_id", nullable = false)
-    private Card card;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_card_id", nullable = false)
+    private Card senderCard;
 
-    @Column(nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_card_id", nullable = false)
+    private Card receiverCard;
+
+    @Column(name = "amount", precision = 15, scale = 2, nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
-    private LocalDateTime transactionDate;
+    @Column(name = "message", length = 255)
+    private String message;
 
-    @Column(nullable = false)
-    private String description;
+    @Column(name = "report")
+    private String report;
 
-    private String transactionType;
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
 

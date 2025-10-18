@@ -45,9 +45,14 @@ public class Card {
 
     private AccountType accountType;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "senderCard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     private String designImageUrl;
+
+    private String financialGoal;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 }
 

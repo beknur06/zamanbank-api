@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cards")
 @RequiredArgsConstructor
@@ -24,9 +26,8 @@ public class CardController {
     }
 
     @GetMapping
-    @Operation(summary = "Получить карту")
-    public ResponseEntity<CardDto> getAllCards() {
-        CardDto card = cardService.getAllCards();
-        return ResponseEntity.ok(card);
+    @Operation(summary = "Получить карты пользователя", description = "Возвращает все банковские карты, связанные с пользователем")
+    public ResponseEntity<List<CardDto>> getAllCards() {
+        return ResponseEntity.ok(cardService.getAllCards());
     }
 }

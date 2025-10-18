@@ -6,8 +6,8 @@ import com.kz.zamanbankapi.dto.CardCreationRequest;
 import com.kz.zamanbankapi.dto.CardDto;
 import com.kz.zamanbankapi.dao.entities.Card;
 import com.kz.zamanbankapi.mapper.CardMapper;
-import com.kz.zamanbankapi.repositories.CardRepository;
-import com.kz.zamanbankapi.repositories.UserRepository;
+import com.kz.zamanbankapi.dao.repositories.CardRepository;
+import com.kz.zamanbankapi.dao.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class CardService {
     private final RestTemplate restTemplate;
     private final CardMapper cardMapper;
 
-    public CardDto getAllCards() {
+    public List<CardDto> getAllCards() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("Пользователь не аутентифицирован");
@@ -39,10 +40,11 @@ public class CardService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
-        Card card = cardRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Карты не найдены для пользователя"));
+        List<Card> card = cardRepository.findByUserId(user.getId());
 
-        return cardMapper.toCardDto(card);
+        return card.stream()
+                .map(cardMapper::toCardDto)
+                .toList();
     }
 
     public CardDto generateAndStoreCard(CardCreationRequest cardRequest) {
@@ -67,7 +69,10 @@ public class CardService {
         card.setDesignImageUrl(designUrl);
         card.setCardType(CardType.MASTERCARD);
         card.setCurrency("KZT");
+        card.setPhoneNumber(user.getUsername());
         card.setBalance(BigDecimal.valueOf(0.0));
+
+        System.out.println(card.getPhoneNumber() + " " + user.getUsername());
 
         Card savedCard = cardRepository.save(card);
         return cardMapper.toCardDto(savedCard);

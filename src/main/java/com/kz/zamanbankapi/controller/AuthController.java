@@ -4,7 +4,7 @@ import com.kz.zamanbankapi.dao.auth.AuthResponse;
 import com.kz.zamanbankapi.dao.auth.LoginRequest;
 import com.kz.zamanbankapi.dao.auth.RegisterRequest;
 import com.kz.zamanbankapi.dao.entities.User;
-import com.kz.zamanbankapi.repositories.UserRepository;
+import com.kz.zamanbankapi.dao.repositories.UserRepository;
 import com.kz.zamanbankapi.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
