@@ -1,9 +1,9 @@
 package com.kz.zamanbankapi.controller;
 
-import com.kz.contracts.auth.AuthResponse;
-import com.kz.contracts.auth.LoginRequest;
-import com.kz.contracts.auth.RegisterRequest;
-import com.kz.contracts.entities.User;
+import com.kz.zamanbankapi.dao.auth.AuthResponse;
+import com.kz.zamanbankapi.dao.auth.LoginRequest;
+import com.kz.zamanbankapi.dao.auth.RegisterRequest;
+import com.kz.zamanbankapi.dao.entities.User;
 import com.kz.zamanbankapi.repositories.UserRepository;
 import com.kz.zamanbankapi.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;

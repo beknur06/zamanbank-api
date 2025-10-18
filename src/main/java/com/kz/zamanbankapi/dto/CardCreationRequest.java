@@ -1,6 +1,6 @@
 package com.kz.zamanbankapi.dto;
 
-import com.kz.contracts.enums.CardType;
+import com.kz.zamanbankapi.dao.enums.CardType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

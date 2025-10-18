@@ -1,6 +1,6 @@
 package com.kz.zamanbankapi.service;
 
-import com.kz.contracts.entities.User;
+import com.kz.zamanbankapi.dao.entities.User;
 import com.kz.zamanbankapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

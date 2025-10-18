@@ -1,6 +1,6 @@
 package com.kz.zamanbankapi.mapper;
 
-import com.kz.contracts.entities.Transaction;
+import com.kz.zamanbankapi.dao.entities.Transaction;
 import com.kz.zamanbankapi.dto.TransactionDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

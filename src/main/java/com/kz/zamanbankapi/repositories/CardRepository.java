@@ -1,6 +1,6 @@
 package com.kz.zamanbankapi.repositories;
 
-import com.kz.contracts.entities.Card;
+import com.kz.zamanbankapi.dao.entities.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

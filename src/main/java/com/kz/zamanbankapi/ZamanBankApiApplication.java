@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-@EntityScan("com.kz.contracts.entities")
+@EntityScan("com.kz.zamanbankapi.dao.entities")
 public class ZamanBankApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ZamanBankApiApplication.class, args);

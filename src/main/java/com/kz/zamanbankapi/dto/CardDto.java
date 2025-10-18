@@ -1,7 +1,7 @@
 package com.kz.zamanbankapi.dto;
 
-import com.kz.contracts.enums.AccountType;
-import com.kz.contracts.enums.CardType;
+import com.kz.zamanbankapi.dao.enums.AccountType;
+import com.kz.zamanbankapi.dao.enums.CardType;
 import lombok.Data;
 
 import java.math.BigDecimal;
