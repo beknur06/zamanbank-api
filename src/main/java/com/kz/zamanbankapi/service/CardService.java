@@ -9,6 +9,8 @@ import com.kz.zamanbankapi.mapper.CardMapper;
 import com.kz.zamanbankapi.repositories.CardRepository;
 import com.kz.zamanbankapi.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,8 +30,15 @@ public class CardService {
     private final CardMapper cardMapper;
 
     public CardDto generateAndStoreCard(CardCreationRequest cardRequest) {
-        User user = userRepository.findById(cardRequest.getUserId())
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Пользователь не аутентифицирован");
+        }
+
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
 
         String designUrl = generateCardDesignAndSaveToMinio(cardRequest.getDesignPreferences());
 
