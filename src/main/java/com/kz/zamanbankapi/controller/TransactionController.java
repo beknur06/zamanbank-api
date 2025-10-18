@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/transactions")
@@ -21,7 +23,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<TransactionDto> getTransactionsByDay() {
+    public Map<LocalDate, List<TransactionDto>> getTransactionsByDay() {
         return transactionService.getTransactionsByDay();
     }
 
