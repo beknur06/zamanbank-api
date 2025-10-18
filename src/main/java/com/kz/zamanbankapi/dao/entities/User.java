@@ -30,5 +30,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Card> cards;
 
+    private String financialGoal = "No goal set";
+
     private Boolean isFraudster = false;
 }

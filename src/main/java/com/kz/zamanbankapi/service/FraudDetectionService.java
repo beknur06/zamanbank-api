@@ -34,8 +34,8 @@ public class FraudDetectionService {
 
     private boolean checkFraudWithLLM(String reportMessage) throws Exception {
         String prompt = String.format(
-                "Проанализируй следующее сообщение о подозрении в мошенничестве и определи, является ли это действительно мошенничеством. " +
-                        "Ответь только 'true' если это мошенничество или 'false' если нет. Сообщение: %s",
+                "Analyze the following message about suspected fraud and determine if it is actually fraud. " +
+                        "Answer only 'true' if it is fraud or 'false' if not. Message: %s",
                 reportMessage
         );
 
