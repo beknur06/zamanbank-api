@@ -22,4 +22,11 @@ public class CardController {
         CardDto card = cardService.generateAndStoreCard(request);
         return ResponseEntity.ok(card);
     }
+
+    @GetMapping
+    @Operation(summary = "Получить карту")
+    public ResponseEntity<CardDto> getAllCards() {
+        CardDto card = cardService.getAllCards();
+        return ResponseEntity.ok(card);
+    }
 }

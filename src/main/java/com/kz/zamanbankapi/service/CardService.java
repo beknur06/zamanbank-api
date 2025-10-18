@@ -29,6 +29,22 @@ public class CardService {
     private final RestTemplate restTemplate;
     private final CardMapper cardMapper;
 
+    public CardDto getAllCards() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Пользователь не аутентифицирован");
+        }
+
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        Card card = cardRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Карты не найдены для пользователя"));
+
+        return cardMapper.toCardDto(card);
+    }
+
     public CardDto generateAndStoreCard(CardCreationRequest cardRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
