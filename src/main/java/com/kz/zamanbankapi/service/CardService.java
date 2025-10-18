@@ -35,13 +35,13 @@ public class CardService {
 
         Card card = new Card();
         card.setUser(user);
-        card.setCardNumber(generateCardNumber(cardRequest.getCardType()));
-        card.setCardHolderName(cardRequest.getCardName());
+        card.setCardNumber(generateCardNumber(CardType.MASTERCARD));
+        card.setCardHolderName(user.getName() + " " + user.getSurname());
         card.setCvv(generateCVV());
         card.setExpirationDate(generateExpiryEom(2));
         card.setDesignImageUrl(designUrl);
-        card.setCardType(cardRequest.getCardType());
-        card.setCurrency(cardRequest.getCurrency());
+        card.setCardType(CardType.MASTERCARD);
+        card.setCurrency("KZT");
         card.setBalance(BigDecimal.valueOf(0.0));
 
         Card savedCard = cardRepository.save(card);

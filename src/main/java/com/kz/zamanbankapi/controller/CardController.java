@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/cards")
 @RequiredArgsConstructor
+@Tag(name = "Cards", description = "API для управления банковскими картами")
 public class CardController {
     private final CardService cardService;
 
-    @PostMapping("/generate-new")
-    public ResponseEntity<CardDto> generateCardImages(@RequestBody CardCreationRequest request) {
-        return ResponseEntity.ok(cardService.generateAndStoreCard(request));
+    @PostMapping
+    @Operation(summary = "Создать новую карту", description = "Генерирует и сохраняет новую банковскую карту для пользователя")
+    public ResponseEntity<CardDto> createCard(@RequestBody CardCreationRequest request) {
+        CardDto card = cardService.generateAndStoreCard(request);
+        return ResponseEntity.ok(card);
     }
 }
