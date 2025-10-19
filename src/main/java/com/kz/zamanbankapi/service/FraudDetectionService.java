@@ -55,6 +55,7 @@ public class FraudDetectionService {
         java.net.http.HttpResponse<String> response = client.send(request,
                 java.net.http.HttpResponse.BodyHandlers.ofString());
 
+        System.out.println("LLM Response: " + response.body());
         // Парсинг ответа (используйте библиотеку JSON, например Jackson или Gson)
         String responseContent = parseResponseContent(response.body());
 

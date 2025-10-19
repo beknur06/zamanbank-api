@@ -13,4 +13,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+    List<Transaction> findAllBySenderCardId(Long cardId);
 }
