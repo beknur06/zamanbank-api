@@ -33,8 +33,10 @@ public class ChatBotService {
     private final TextToSpeechService textToSpeechService;
     private final TransactionRepository transactionRepository;
 
+    private final UserService userService;
+
     public void updateFinancialGoal(String financialGoal) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         user.setFinancialGoal(financialGoal);
         userRepository.save(user);
     }
@@ -55,7 +57,7 @@ public class ChatBotService {
     }
 
     private String getDirectChatResponse(String userMessage) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         String financialGoal = user.getFinancialGoal();
 
         String systemPrompt = "You are a friendly financial advisor having a casual conversation. " +
@@ -158,7 +160,7 @@ public class ChatBotService {
     }
 
     public byte[] analyzeAndConvertToSpeech(String text) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         String financialGoal = user.getFinancialGoal();
 
         String aiResponse = analyzeWithAI(text, financialGoal);
@@ -166,7 +168,7 @@ public class ChatBotService {
     }
 
     public String generateFinancialReport(String reportMessage) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         String financialGoal = user.getFinancialGoal();
         Card userCard = user.getCards().stream()
                 .max(Comparator.comparing(card -> {
@@ -224,7 +226,7 @@ public class ChatBotService {
     }
 
     public String analyzeFinances(String financialData) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         String financialGoal = user.getFinancialGoal();
 
         String prompt = String.format(
@@ -249,7 +251,7 @@ public class ChatBotService {
     }
 
     public String askFinancialAdvice(String question) {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         String financialGoal = user.getFinancialGoal();
 
         String prompt = String.format(
@@ -321,16 +323,5 @@ public class ChatBotService {
         }
 
         throw new RuntimeException("Ошибка получения ответа от AI");
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("Пользователь не аутентифицирован");
-        }
-
-        String username = authentication.getName();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 }

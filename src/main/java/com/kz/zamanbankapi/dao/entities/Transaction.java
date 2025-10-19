@@ -20,8 +20,8 @@ public class Transaction {
     @JoinColumn(name = "sender_card_id", nullable = false)
     private Card senderCard;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_card_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_card_id")
     private Card receiverCard;
 
     @Column(name = "amount", precision = 15, scale = 2, nullable = false)

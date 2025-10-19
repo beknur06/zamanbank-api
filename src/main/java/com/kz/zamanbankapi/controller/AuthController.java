@@ -42,9 +42,11 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setName(request.getName());
         user.setSurname(request.getSurname());
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully");
+        String token = jwtUtil.generateToken(savedUser.getUsername());
+
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 
     @PostMapping("/login")
