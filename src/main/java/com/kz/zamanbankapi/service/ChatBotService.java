@@ -110,12 +110,15 @@ public class ChatBotService {
 
     private String detectRequestType(String userMessage) {
         String prompt = String.format(
-                "Classify the following user message into one of these categories:\n" +
-                        "- 'report': User wants a comprehensive financial report/overview/summary\n" +
-                        "- 'analysis': User wants to analyze specific financial data/transactions/expenses\n" +
-                        "- 'advice': User asks a question or needs financial advice/guidance\n\n" +
-                        "User message: \"%s\"\n\n" +
-                        "Respond with ONLY one word: report, analysis, or advice",
+                """
+                        Classify the following user message into one of these categories:
+                        - 'report': User wants a comprehensive financial report/overview/summary
+                        - 'analysis': User wants to analyze specific financial data/transactions/expenses
+                        - 'advice': User asks a question or needs financial advice/guidance
+                        
+                        User message: "%s"
+                        
+                        Respond with ONLY one word: report, analysis, or advice""",
                 userMessage
         );
 
@@ -193,7 +196,7 @@ public class ChatBotService {
                         3. Key recommendations
                         4. Action items
                         5. Do not format or say hi just see it as chat message
-                        Keep it concise and actionable (max 100 words).""",
+                        Keep it concise and actionable (max 100 words) and do not use markdown.""",
                 financialGoal != null ? financialGoal : "Not specified",
                 reportMessage,
                 formatTransactions(transactionList),
@@ -235,7 +238,8 @@ public class ChatBotService {
                         3. Risk assessment
                         4. Optimization opportunities
                         5. Do not format anything with text just see it as chat message
-                        Be specific and data-driven.""",
+                        Be specific and data-driven.
+                        Keep it concise and actionable (max 70 words) and do not use markdown""",
                 financialGoal != null ? financialGoal : "Not specified",
                 financialData,
                 user.getCards().stream().findFirst().map(Card::getBalance).orElse(BigDecimal.valueOf(0.0))
@@ -249,12 +253,17 @@ public class ChatBotService {
         String financialGoal = user.getFinancialGoal();
 
         String prompt = String.format(
-                "User's financial goal: %s\n\n" +
-                "User's question: %s\n\n" +
-                "Provide clear, actionable financial advice. " +
-                "Be specific, practical, and tailored to their goal. " +
-                "Include step-by-step guidance if applicable." +
-                "Do not format anything with text just see it as chat message\n",
+                """
+                        User's financial goal: %s
+                        
+                        User's question: %s
+                        
+                        Provide clear, actionable financial advice. \
+                        Be specific, practical, and tailored to their goal. \
+                        Include step-by-step guidance if applicable.\
+                        Do not format anything with text just see it as chat message
+                        Keep it concise and actionable (max 70 words) and do not use markdown
+                        """,
                 financialGoal != null ? financialGoal : "Not specified",
                 question
         );
@@ -264,10 +273,13 @@ public class ChatBotService {
 
     private String analyzeWithAI(String userText, String financialGoal) {
         String prompt = String.format(
-                "User's financial goal: %s\n\n" +
-                "User's message: %s\n\n" +
-                "Analyze the user's message in context of their financial goal. " +
-                "Provide brief, actionable financial advice (max 2-3 sentences).",
+                """
+                        User's financial goal: %s
+                        
+                        User's message: %s
+                        
+                        Analyze the user's message in context of their financial goal. \
+                        Provide brief, actionable financial advice (max 2-3 sentences), do not use markdown.""",
                 financialGoal != null ? financialGoal : "Not specified",
                 userText
         );
