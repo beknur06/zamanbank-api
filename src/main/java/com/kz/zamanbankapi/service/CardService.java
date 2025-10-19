@@ -9,6 +9,7 @@ import com.kz.zamanbankapi.mapper.CardMapper;
 import com.kz.zamanbankapi.dao.repositories.CardRepository;
 import com.kz.zamanbankapi.dao.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CardService {
     private final CardRepository cardRepository;
@@ -72,7 +74,6 @@ public class CardService {
         card.setPhoneNumber(user.getUsername());
         card.setBalance(BigDecimal.valueOf(0.0));
 
-        System.out.println(card.getPhoneNumber() + " " + user.getUsername());
 
         Card savedCard = cardRepository.save(card);
         return cardMapper.toCardDto(savedCard);
@@ -140,7 +141,7 @@ public class CardService {
 
                 com.fasterxml.jackson.databind.JsonNode jobs = new com.fasterxml.jackson.databind.ObjectMapper().readTree(statusResponse.getBody()).get("jobs");
 
-                System.out.println(statusResponse.getBody());
+                log.info(statusResponse.getBody());
                 if (jobs != null && jobs.isArray() && !jobs.isEmpty()) {
                     com.fasterxml.jackson.databind.JsonNode firstJob = jobs.get(0);
                     String status = firstJob.get("status").asText();

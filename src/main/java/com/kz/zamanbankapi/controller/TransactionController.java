@@ -23,8 +23,8 @@ public class TransactionController {
     }
 
     @GetMapping
-    public Map<LocalDate, List<TransactionDto>> getTransactionsByDay() {
-        return transactionService.getTransactionsByDay();
+    public Map<LocalDate, List<TransactionDto>> getTransactionsByDay(@RequestParam Long cardId) {
+        return transactionService.getTransactionsByDay(cardId);
     }
 
     @PutMapping

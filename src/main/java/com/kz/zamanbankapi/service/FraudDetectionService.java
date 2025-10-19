@@ -3,12 +3,16 @@ package com.kz.zamanbankapi.service;
 import com.kz.zamanbankapi.dao.entities.Transaction;
 import com.kz.zamanbankapi.dao.entities.User;
 import com.kz.zamanbankapi.dao.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class FraudDetectionService {
-    private static final String apiUrl = "https://openai-hub.neuraldeep.tech/v1/chat/completions";
-    private static final String apiKey = "sk-roG3OusRr0TLCHAADks6lw";
+    private static final String apiUrl = "https://api.openai.com/v1/chat/completions";
+    @Value("${openai.api-key}")
+    private String apiKey;
     private final UserRepository userRepository;
 
     public FraudDetectionService(UserRepository userRepository) {
@@ -55,11 +59,11 @@ public class FraudDetectionService {
         java.net.http.HttpResponse<String> response = client.send(request,
                 java.net.http.HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("LLM Response: " + response.body());
+        log.info("LLM Response: {}", response.body());
         // Парсинг ответа (используйте библиотеку JSON, например Jackson или Gson)
         String responseContent = parseResponseContent(response.body());
 
-        System.out.println("LLM Response Content: " + responseContent);
+        log.info("LLM Response Content: {}", responseContent);
         return responseContent.toLowerCase().contains("true");
     }
 

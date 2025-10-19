@@ -32,7 +32,7 @@ public class TransactionService {
     public TransactionDto create(TransactionCreateRequest request) {
         Card sender = cardRepository.findById(request.getSenderCardId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender card not found"));
-        Card receiver = cardRepository.findByPhoneNumber(request.getReceiverPhone())
+        Card receiver = cardRepository.findFirstByPhoneNumberOrderByExpirationDateDesc(request.getReceiverPhone())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender card not found"));
         
         Transaction entity = new Transaction();
@@ -48,13 +48,14 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public Map<LocalDate, List<TransactionDto>> getTransactionsByDay() {
+    public Map<LocalDate, List<TransactionDto>> getTransactionsByDay(Long cardId) {
+        Card card = cardRepository.findById(cardId).orElseThrow();
         LocalDateTime start = LocalDate.now().atStartOfDay();
         LocalDateTime end = start.plusDays(1);
         return transactionRepository
-                .findAllByCreatedAtGreaterThanEqualAndCreatedAtLessThan(start, end)
+                .findAllBySenderCardOrReceiverCardAndCreatedAtBetween(card, card, start, end)
                 .stream()
-                .map(transactionMapper::toDto)
+                .map(transaction -> transactionMapper.toDto(transaction, cardId))
                 .collect(Collectors.groupingBy(dto -> dto.getCreatedAt().toLocalDate()));
     }
 
