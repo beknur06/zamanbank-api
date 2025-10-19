@@ -4,6 +4,7 @@ import com.kz.zamanbankapi.dao.entities.Card;
 import com.kz.zamanbankapi.dao.entities.Transaction;
 import com.kz.zamanbankapi.dao.entities.User;
 import com.kz.zamanbankapi.dao.repositories.TransactionRepository;
+import com.kz.zamanbankapi.dto.AishaAdvice;
 import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,12 @@ public class ReminderService {
     private final TransactionRepository transactionRepository;
     private final RestTemplate restTemplate;
 
-    public String getReminders() {
+    public AishaAdvice getReminders() {
         User user = userService.getCurrentUser();
         log.info(user.toString());
         log.info(user.getCards().toString());
         if (user.getCards().isEmpty()) {
-            return "Assalamu alaikum";
+            return new AishaAdvice("Assalamu alaikum", 1); // Happy greeting
         }
 
         // Получаем транзакции пользователя
@@ -69,7 +70,7 @@ public class ReminderService {
                 .orElse("");
     }
 
-    private String getShortReminderFromGPT(String prompt) {
+    private AishaAdvice getShortReminderFromGPT(String prompt) {
         JSONObject message = new JSONObject()
                 .put("role", "user")
                 .put("content", prompt);
@@ -92,16 +93,71 @@ public class ReminderService {
                 String.class
         );
 
+        String reminderText;
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             JSONObject jsonResponse = new JSONObject(response.getBody());
-            return jsonResponse
+            reminderText = jsonResponse
                     .getJSONArray("choices")
                     .getJSONObject(0)
                     .getJSONObject("message")
                     .getString("content")
                     .trim();
+        } else {
+            reminderText = "Check your finances";
         }
 
-        return "Check your finances";
+        int mood = analyzeMood(reminderText);
+        return new AishaAdvice(reminderText, mood);
+    }
+
+    private int analyzeMood(String reminderText) {
+        String moodPrompt = String.format(
+                """
+                Analyze the mood of this financial reminder: "%s"
+                
+                Respond with only "1" if the message is positive/encouraging or "0" if it's negative/concerning.
+                """,
+                reminderText
+        );
+
+        JSONObject message = new JSONObject()
+                .put("role", "user")
+                .put("content", moodPrompt);
+
+        JSONObject body = new JSONObject()
+                .put("model", "gpt-4o-mini")
+                .put("messages", new JSONArray().put(message))
+                .put("max_tokens", 5)
+                .put("temperature", 0.1);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+
+        HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    OPENAI_CHAT_URL,
+                    entity,
+                    String.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                JSONObject jsonResponse = new JSONObject(response.getBody());
+                String moodResponse = jsonResponse
+                        .getJSONArray("choices")
+                        .getJSONObject(0)
+                        .getJSONObject("message")
+                        .getString("content")
+                        .trim();
+
+                return moodResponse.equals("1") ? 1 : 0;
+            }
+        } catch (Exception e) {
+            log.error("Error analyzing mood", e);
+        }
+
+        return 1; // Default to happy
     }
 }

@@ -28,6 +28,7 @@ public class FraudDetectionService {
         User user = transaction.getReceiverCard().getUser();
         String reportMessage = transaction.getReport();
 
+        log.info(reportMessage);
         try {
             user.setIsFraudster(checkFraudWithLLM(reportMessage));
         } catch (Exception e) {
@@ -47,6 +48,8 @@ public class FraudDetectionService {
                 "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"%s\"}]}",
                 prompt.replace("\"", "\\\"")
         );
+
+        log.info(prompt);
 
         java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
         java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()

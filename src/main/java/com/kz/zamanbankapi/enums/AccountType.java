@@ -1,4 +1,4 @@
-package com.kz.zamanbankapi.dao.enums;
+package com.kz.zamanbankapi.enums;
 
 public enum AccountType {
     PERSONAL,

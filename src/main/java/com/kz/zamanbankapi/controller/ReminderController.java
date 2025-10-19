@@ -1,5 +1,6 @@
 package com.kz.zamanbankapi.controller;
 
+import com.kz.zamanbankapi.dto.AishaAdvice;
 import com.kz.zamanbankapi.service.ReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ public class ReminderController {
     private final ReminderService reminderService;
 
     @GetMapping
-    public String getReminders() {
+    public AishaAdvice getReminders() {
         return reminderService.getReminders();
     }
 }

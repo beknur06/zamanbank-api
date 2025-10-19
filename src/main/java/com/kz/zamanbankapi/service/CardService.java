@@ -1,7 +1,7 @@
 package com.kz.zamanbankapi.service;
 
 import com.kz.zamanbankapi.dao.entities.User;
-import com.kz.zamanbankapi.dao.enums.CardType;
+import com.kz.zamanbankapi.enums.CardType;
 import com.kz.zamanbankapi.dto.CardCreationRequest;
 import com.kz.zamanbankapi.dto.CardDto;
 import com.kz.zamanbankapi.dao.entities.Card;

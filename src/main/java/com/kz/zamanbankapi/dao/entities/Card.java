@@ -1,7 +1,7 @@
 package com.kz.zamanbankapi.dao.entities;
 
-import com.kz.zamanbankapi.dao.enums.AccountType;
-import com.kz.zamanbankapi.dao.enums.CardType;
+import com.kz.zamanbankapi.enums.AccountType;
+import com.kz.zamanbankapi.enums.CardType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
