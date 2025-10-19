@@ -34,13 +34,23 @@ public class TransactionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender card not found"));
         Card receiver = cardRepository.findFirstByPhoneNumberOrderByExpirationDateDesc(request.getReceiverPhone())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender card not found"));
-        
+
+        if(sender.getBalance().compareTo(request.getAmount()) > 0) {
+            sender.setBalance(sender.getBalance().subtract(request.getAmount()));
+            receiver.setBalance(receiver.getBalance().add(request.getAmount()));
+            cardRepository.save(sender);
+            cardRepository.save(receiver);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds");
+        }
+
         Transaction entity = new Transaction();
         
         entity.setSenderCard(sender);
         entity.setReceiverCard(receiver);
         entity.setAmount(request.getAmount());
         entity.setMessage(request.getMessage());
+
         
         Transaction saved = transactionRepository.save(entity);
         
