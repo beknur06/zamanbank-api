@@ -68,10 +68,13 @@ public class FraudDetectionService {
     }
 
     private String parseResponseContent(String responseBody) {
-        // Используйте Jackson или Gson для парсинга JSON
-        // Пример с простым поиском (замените на полноценный парсинг):
-        int contentStart = responseBody.indexOf("\"content\":\"") + 11;
-        int contentEnd = responseBody.indexOf("\"", contentStart);
-        return responseBody.substring(contentStart, contentEnd);
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            com.fasterxml.jackson.databind.JsonNode root = mapper.readTree(responseBody);
+            return root.path("choices").get(0).path("message").path("content").asText();
+        } catch (Exception e) {
+            log.error("Ошибка при парсинге ответа LLM: {}", e.getMessage());
+            throw new RuntimeException("Не удалось распарсить ответ от LLM", e);
+        }
     }
 }
